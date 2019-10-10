@@ -26,16 +26,21 @@ class App extends Component {
   }
 
   handleDelete = (listId, cardId) => {
-    const lists = this.state.lists
-    const listIdx = lists.findIndex(list => list.id === listId)
-    const list = lists[listIdx]
+    const lists = this.state.lists.map(list => {
+      list.cardIds = list.cardIds.filter(id => id !== cardId)
+      return list
+    })
 
-    list.cardIds = list.cardIds.filter(id => id !== cardId)
-    lists.splice(listIdx, 1, list)
+    const allCards = Object.entries(this.state.allCards).reduce(
+      (newObj, [key, value]) =>
+          key === cardId ? newObj : {...newObj, [key]: value},
+      {}
+    )
 
     this.setState(
       {
-        lists
+        lists,
+        allCards
       }
     )
   }
